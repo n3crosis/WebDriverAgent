@@ -361,8 +361,8 @@
                                          initialUrl:(nullable NSString *)initialUrl
                                        capabilities:(NSDictionary<NSString *, id> *)capabilities
 {
-  app.fb_shouldWaitForQuiescence = nil == capabilities[FB_CAP_SHOULD_WAIT_FOR_QUIESCENCE]
-    || [capabilities[FB_CAP_SHOULD_WAIT_FOR_QUIESCENCE] boolValue];
+  app.fb_shouldWaitForQuiescence = nil != capabilities[FB_CAP_SHOULD_WAIT_FOR_QUIESCENCE]
+    && [capabilities[FB_CAP_SHOULD_WAIT_FOR_QUIESCENCE] boolValue];
   app.launchArguments = (NSArray<NSString *> *)capabilities[FB_CAP_ARGUMENTS] ?: @[];
   app.launchEnvironment = (NSDictionary<NSString *, NSString *> *)capabilities[FB_CAP_ENVIRNOMENT] ?: @{};
 

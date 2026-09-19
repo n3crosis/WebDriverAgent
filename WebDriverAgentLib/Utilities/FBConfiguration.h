@@ -198,14 +198,16 @@ typedef NS_ENUM(NSInteger, FBConfigurationKeyboardPreference) {
 
 /**
  * Whether to use fast search result matching while searching for elements.
- * By default this is disabled due to https://github.com/appium/appium/issues/10101
+ * Enabled by default in this fork to reduce element resolution latency.
+ * Upstream disables it due to https://github.com/appium/appium/issues/10101,
  * but it still makes sense to enable it for views containing large counts of elements
  */
 @property (atomic, assign) BOOL useFirstMatch;
 
 /**
  * Whether to bound the lookup results by index.
- * By default this is disabled and bounding by accessibility is used.
+ * Enabled by default in this fork to reduce element resolution latency.
+ * Upstream disables it and uses bounding by accessibility instead.
  * Read https://stackoverflow.com/questions/49307513/meaning-of-allelementsboundbyaccessibilityelement
  * for more details on these two bounding methods.
  */
@@ -222,7 +224,7 @@ typedef NS_ENUM(NSInteger, FBConfigurationKeyboardPreference) {
  * The idling timeout. If the timeout expires then WDA
  * tries to interact with the application even if it is not idling.
  * Setting it to zero disables idling checks.
- * The default timeout is set to 10 seconds.
+ * The default timeout is set to 0 seconds in this fork (upstream default is 10).
  */
 @property (atomic, assign) NSTimeInterval waitForIdleTimeout;
 
@@ -230,7 +232,7 @@ typedef NS_ENUM(NSInteger, FBConfigurationKeyboardPreference) {
  * The idling timeout for different actions, for example events synthesis, rotation change,
  * etc. If the timeout expires then WDA tries to interact with the application even if it is not idling.
  * Setting it to zero disables idling checks.
- * The default timeout is set to 2 seconds.
+ * The default timeout is set to 0 seconds in this fork (upstream default is 2).
  */
 @property (atomic, assign) NSTimeInterval animationCoolOffTimeout;
 

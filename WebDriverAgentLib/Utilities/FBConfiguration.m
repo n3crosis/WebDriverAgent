@@ -344,13 +344,13 @@ static NSString *const axSettingsClassName = @"AXSettings";
   self.elementResponseAttributes = @"type,label";
   self.maxTypingFrequencyOverride = @(self.defaultTypingFrequency);
   self.screenshotQuality = 3;
-  self.useFirstMatch = NO;
-  self.boundElementsByIndex = NO;
+  self.useFirstMatch = YES;
+  self.boundElementsByIndex = YES;
   self.acceptAlertButtonSelector = @"";
   self.dismissAlertButtonSelector = @"";
   self.autoClickAlertSelector = @"";
-  self.waitForIdleTimeout = 10.;
-  self.animationCoolOffTimeout = 2.;
+  self.waitForIdleTimeout = 0.;
+  self.animationCoolOffTimeout = 0.;
   self.accessibilityDeadline = 0.;
   // 50 should be enough for the majority of the cases. The performance is acceptable for values up to 100.
   FBSetCustomParameterForElementSnapshot(FBSnapshotMaxDepthKey, @50);
