@@ -142,6 +142,10 @@ static NSSet<NSString *> *FBNilClearableSettingKeys(void)
       FBConfiguration.sharedInstance.animationCoolOffTimeout = [value doubleValue];
       return nil;
     };
+    map[FB_SETTING_USE_SYNTHETIC_TAP] = ^FBCommandStatus *(FBSession *session, id value) {
+      FBConfiguration.sharedInstance.useSyntheticTap = [value boolValue];
+      return nil;
+    };
     map[FB_SETTING_ACCESSIBILITY_DEADLINE] = ^FBCommandStatus *(FBSession *session, id value) {
       FBConfiguration.sharedInstance.accessibilityDeadline = [value doubleValue];
       return nil;
@@ -252,6 +256,9 @@ static NSSet<NSString *> *FBNilClearableSettingKeys(void)
     };
     map[FB_SETTING_ANIMATION_COOL_OFF_TIMEOUT] = ^id(FBSession *session) {
       return @(FBConfiguration.sharedInstance.animationCoolOffTimeout);
+    };
+    map[FB_SETTING_USE_SYNTHETIC_TAP] = ^id(FBSession *session) {
+      return @(FBConfiguration.sharedInstance.useSyntheticTap);
     };
     map[FB_SETTING_ACCESSIBILITY_DEADLINE] = ^id(FBSession *session) {
       return @(FBConfiguration.sharedInstance.accessibilityDeadline);

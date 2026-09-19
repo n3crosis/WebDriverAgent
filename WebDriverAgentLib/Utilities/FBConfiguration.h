@@ -237,6 +237,16 @@ typedef NS_ENUM(NSInteger, FBConfigurationKeyboardPreference) {
 @property (atomic, assign) NSTimeInterval animationCoolOffTimeout;
 
 /**
+ * Whether coordinate taps (requests that provide x/y and no element uuid)
+ * are synthesized directly via XCSynthesizedEventRecord instead of resolving
+ * the active application element and its frame first. This skips all
+ * accessibility snapshot requests and significantly reduces tap latency.
+ * Enabled by default in this fork. Falls back to the legacy implementation
+ * if the direct synthesis fails.
+ */
+@property (atomic, assign) BOOL useSyntheticTap;
+
+/**
  * Maximum time to wait for the frontmost application to confirm its main run loop
  * is responsive before an accessibility snapshot request (element attribute
  * lookups, active app detection, etc). XCTest has no bounded timeout of its own

@@ -351,6 +351,7 @@ static NSString *const axSettingsClassName = @"AXSettings";
   self.autoClickAlertSelector = @"";
   self.waitForIdleTimeout = 0.;
   self.animationCoolOffTimeout = 0.;
+  self.useSyntheticTap = YES;
   self.accessibilityDeadline = 0.;
   // 50 should be enough for the majority of the cases. The performance is acceptable for values up to 100.
   FBSetCustomParameterForElementSnapshot(FBSnapshotMaxDepthKey, @50);

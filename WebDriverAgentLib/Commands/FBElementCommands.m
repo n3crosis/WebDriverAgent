@@ -10,6 +10,7 @@
 
 #import "FBConfiguration.h"
 #import "FBKeyboard.h"
+#import "FBLogger.h"
 #import "FBRoute.h"
 #import "FBRouteRequest.h"
 #import "FBRunLoopSpinner.h"
@@ -39,6 +40,9 @@
 #import "XCUIElement.h"
 #import "XCUIElementQuery.h"
 #import "FBXCodeCompatibility.h"
+#import "FBXCTestDaemonsProxy.h"
+#import "XCPointerEventPath.h"
+#import "XCSynthesizedEventRecord.h"
 
 @interface FBElementCommands ()
 @end
@@ -484,6 +488,22 @@
 
 + (id<FBResponsePayload>)handleTap:(FBRouteRequest *)request
 {
+#if !TARGET_OS_TV && !TARGET_OS_WATCH
+  NSNumber *x = request.arguments[@"x"];
+  NSNumber *y = request.arguments[@"y"];
+  if (nil != x && nil != y
+      && nil == request.parameters[@"uuid"]
+      && FBConfiguration.sharedInstance.useSyntheticTap) {
+    NSError *synthesisError;
+    if ([self.class fb_synthesizeTapAtPoint:CGPointMake(x.doubleValue, y.doubleValue)
+                                      error:&synthesisError]) {
+      return FBResponseWithOK();
+    }
+    [FBLogger logFmt:@"Failed to synthesize a tap at (%@, %@): %@. Falling back to the legacy implementation",
+     x, y, synthesisError.localizedDescription];
+  }
+#endif
+
   NSError *error;
   id target = [self targetWithXyCoordinatesFromRequest:request error:&error];
   if (nil == target) {
@@ -493,6 +513,27 @@
   [target tap];
   return FBResponseWithOK();
 }
+
+#if !TARGET_OS_TV && !TARGET_OS_WATCH
+/**
+ Synthesizes a tap at the given absolute screen coordinates without resolving
+ any element or accessibility snapshot.
+
+ @param point Absolute screen point in points
+ @param error Error instance if any
+ @return YES if the event was synthesized successfully
+ */
++ (BOOL)fb_synthesizeTapAtPoint:(CGPoint)point error:(NSError **)error
+{
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc]
+                                           initWithName:@"Synthetic Tap"
+                                           interfaceOrientation:XCUIDevice.sharedDevice.orientation];
+  XCPointerEventPath *eventPath = [[XCPointerEventPath alloc] initForTouchAtPoint:point offset:0.0];
+  [eventPath liftUpAtOffset:0.05];
+  [eventRecord addPointerEventPath:eventPath];
+  return [FBXCTestDaemonsProxy synthesizeEventWithRecord:eventRecord error:error];
+}
+#endif
 
 + (id<FBResponsePayload>)handlePinch:(FBRouteRequest *)request
 {
