@@ -531,7 +531,11 @@
   XCPointerEventPath *eventPath = [[XCPointerEventPath alloc] initForTouchAtPoint:point offset:0.0];
   [eventPath liftUpAtOffset:0.05];
   [eventRecord addPointerEventPath:eventPath];
-  return [FBXCTestDaemonsProxy synthesizeEventWithRecord:eventRecord error:error];
+  CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
+  BOOL result = [FBXCTestDaemonsProxy synthesizeEventWithRecord:eventRecord error:error];
+  [FBLogger logFmt:@"Synthetic tap at (%.1f, %.1f) took %.1f ms",
+   point.x, point.y, (CFAbsoluteTimeGetCurrent() - startTime) * 1000.0];
+  return result;
 }
 #endif
 
